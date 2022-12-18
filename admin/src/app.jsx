@@ -1,7 +1,9 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-
 import GenericApp from '@iobroker/adapter-react/GenericApp';
+
+import Utils from '@iobroker/adapter-react/Components/Utils';
+
 import Settings from './components/settings';
 
 /**
@@ -32,8 +34,12 @@ class App extends GenericApp {
 		super(props, extendedProps);
 	}
 
-	onConnectionReady() {
+	async onConnectionReady() {
 		// executed when connection is ready
+
+		console.log(this);
+
+		console.log(Utils);
 	}
 
 	render() {

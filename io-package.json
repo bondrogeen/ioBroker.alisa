@@ -59,6 +59,7 @@
 		"adminUI": {
 			"config": "materialize"
 		},
+		"messagebox": true,
 		"eraseOnUpload": true,
 		"dependencies": [
 			{
@@ -72,8 +73,7 @@
 		]
 	},
 	"native": {
-		"option1": true,
-		"option2": "42"
+		"token": ""
 	},
 	"objects": [],
 	"instanceObjects": []
