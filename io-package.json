@@ -1,0 +1,80 @@
+{
+	"common": {
+		"name": "alisa",
+		"version": "0.0.2",
+		"news": {
+			"0.0.2": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "alisa",
+		"titleLang": {
+			"en": "alisa",
+			"de": "Alisa",
+			"ru": "Алиса",
+			"pt": "alisa",
+			"nl": "alisa",
+			"fr": "alisa",
+			"it": "alise",
+			"es": "alisa",
+			"pl": "Alicja",
+			"zh-cn": "阿丽莎"
+		},
+		"desc": {
+			"en": "yandex device alisa",
+			"de": "Yandex-Gerät Alisa",
+			"ru": "алиса яндекс устройство",
+			"pt": "dispositivo yandex alisa",
+			"nl": "yandex apparaat alisa",
+			"fr": "appareil yandex alisa",
+			"it": "dispositivo yandex alisa",
+			"es": "dispositivo yandex alisa",
+			"pl": "urządzenie yandex alisa",
+			"zh-cn": "yandex 设备 alisa"
+		},
+		"authors": ["bondrogeen <bondrogeen@gmail.com>"],
+		"keywords": ["alisa yandex"],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "alisa.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/bondrogeen/ioBroker.alisa/main/admin/alisa.png",
+		"readme": "https://github.com/bondrogeen/ioBroker.alisa/blob/main/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "multimedia",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"adminUI": {
+			"config": "materialize"
+		},
+		"eraseOnUpload": true,
+		"dependencies": [
+			{
+				"js-controller": ">=3.3.22"
+			}
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=5.0.0"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": []
+}
