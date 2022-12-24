@@ -9,6 +9,7 @@ let themeName = Utils.getThemeName();
 
 function build() {
 	console.log(Utils);
+
 	ReactDOM.render(
 		<MuiThemeProvider theme={theme(themeName)}>
 			<App

@@ -1,150 +1,89 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Input from '@material-ui/core/Input';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import Button from '@material-ui/core/Button';
 import I18n from '@iobroker/adapter-react/i18n';
 
-/**
- * @type {() => Record<string, import("@material-ui/core/styles/withStyles").CreateCSSProperties>}
- */
-const styles = () => ({
-	input: {
-		marginTop: 0,
-		minWidth: 400,
-	},
-	button: {
-		marginRight: 20,
-	},
-	card: {
-		maxWidth: 345,
-		textAlign: 'center',
-	},
-	media: {
-		height: 180,
-	},
-	column: {
-		display: 'inline-block',
-		verticalAlign: 'top',
-		marginRight: 20,
-	},
-	columnLogo: {
-		width: 350,
-		marginRight: 0,
-	},
-	columnSettings: {
-		width: 'calc(100% - 370px)',
-	},
-	controlElement: {
-		//background: "#d2d2d2",
-		marginBottom: 5,
-	},
-});
+export function Settings({ native, onChange, onSend }) {
+	const [error, setError] = React.useState('');
+	const [value, setValue] = React.useState(true);
+	const [username, setUsername] = React.useState('');
+	const [password, setPassword] = React.useState('');
 
-/**
- * @typedef {object} SettingsProps
- * @property {Record<string, string>} classes
- * @property {Record<string, any>} native
- * @property {(attr: string, value: any) => void} onChange
- */
+	const attr = 'token';
 
-/**
- * @typedef {object} SettingsState
- * @property {undefined} [dummy] Delete this and add your own state properties here
- */
+	const isDisabled = Boolean(!username || !password);
 
-/**
- * @extends {React.Component<SettingsProps, SettingsState>}
- */
-class Settings extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
+	const onSubmit = async () => {
+		setError('');
+		const res = await onSend('token', { username, password });
+		const error_description = res?.error_description || '';
+		const access_token = res?.access_token || '';
+		if (error_description) setError(error_description);
+		if (access_token) {
+			onChange(attr, access_token);
+			setValue(true);
+			setUsername('');
+			setPassword('');
+		}
+	};
 
-	/**
-	 * @param {AdminWord} title
-	 * @param {string} attr
-	 * @param {string} type
-	 */
-	renderInput(title, attr, type) {
-		return (
-			<TextField
-				label={I18n.t(title)}
-				className={`${this.props.classes.input} ${this.props.classes.controlElement}`}
-				value={this.props.native[attr]}
-				type={type || 'text'}
-				onChange={(e) => this.props.onChange(attr, e.target.value)}
-				margin="normal"
-			/>
-		);
-	}
-
-	/**
-	 * @param {AdminWord} title
-	 * @param {string} attr
-	 * @param {{ value: string; title: AdminWord }[]} options
-	 * @param {React.CSSProperties} [style]
-	 */
-	renderSelect(title, attr, options, style) {
-		return (
-			<FormControl
-				className={`${this.props.classes.input} ${this.props.classes.controlElement}`}
-				style={{
-					paddingTop: 5,
-					...style,
-				}}
-			>
-				<Select
-					value={this.props.native[attr] || '_'}
-					onChange={(e) => this.props.onChange(attr, e.target.value === '_' ? '' : e.target.value)}
-					input={<Input name={attr} id={attr + '-helper'} />}
-				>
-					{options.map((item) => (
-						<MenuItem key={'key-' + item.value} value={item.value || '_'}>
-							{I18n.t(item.title)}
-						</MenuItem>
-					))}
-				</Select>
-				<FormHelperText>{I18n.t(title)}</FormHelperText>
-			</FormControl>
-		);
-	}
-
-	/**
-	 * @param {AdminWord} title
-	 * @param {string} attr
-	 * @param {React.CSSProperties} [style]
-	 */
-	renderCheckbox(title, attr, style) {
-		return (
-			<FormControlLabel
-				key={attr}
-				style={{
-					paddingTop: 5,
-					...style,
-				}}
-				className={this.props.classes.controlElement}
-				control={
-					<Checkbox
-						checked={this.props.native[attr]}
-						onChange={() => this.props.onChange(attr, !this.props.native[attr])}
-						color="primary"
+	return (
+		<div className="settings-form">
+			{value && (
+				<div>
+					<h2>Token</h2>
+					<TextField
+						className="settings-form__textfield"
+						fullWidth
+						label={I18n.t(attr)}
+						value={native[attr]}
+						type="text"
+						onChange={(e) => onChange(attr, e.target.value)}
+						margin="normal"
 					/>
-				}
-				label={I18n.t(title)}
-			/>
-		);
-	}
-
-	render() {
-		return <form className={this.props.classes.tab}>{this.renderInput('token', 'token', 'text')}</form>;
-	}
+					<span className="settings-form__link" onClick={() => setValue(false)}>
+						get yandex token
+					</span>
+				</div>
+			)}
+			{!value && (
+				<div>
+					<h2>{I18n.t('login')}</h2>
+					<TextField
+						className="settings-form__textfield"
+						fullWidth
+						label={I18n.t('login')}
+						value={username}
+						type="text"
+						onChange={(e) => setUsername(e.target.value)}
+						margin="normal"
+					/>
+					<TextField
+						className="settings-form__textfield"
+						fullWidth
+						label={I18n.t('password')}
+						value={password}
+						type="text"
+						onChange={(e) => setPassword(e.target.value)}
+						margin="normal"
+					/>
+					{error && <p className="settings-form__error">{error}</p>}
+					<div>
+						<Button className="settings-form__btn" onClick={() => setValue(true)} size="medium">
+							{I18n.t('cancel')}
+						</Button>
+						<Button
+							className="settings-form__btn"
+							variant="contained"
+							onClick={onSubmit}
+							size="medium"
+							disabled={isDisabled}
+						>
+							{I18n.t('login')}
+						</Button>
+					</div>
+				</div>
+			)}
+		</div>
+	);
 }
-
-export default withStyles(styles)(Settings);

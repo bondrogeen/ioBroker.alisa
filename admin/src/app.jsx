@@ -1,10 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import GenericApp from '@iobroker/adapter-react/GenericApp';
-
-import Utils from '@iobroker/adapter-react/Components/Utils';
-
-import Settings from './components/settings';
+import { Main } from './components/main';
 
 /**
  * @type {(_theme: import("@material-ui/core/styles").Theme) => import("@material-ui/styles").StyleRules}
@@ -36,10 +33,13 @@ class App extends GenericApp {
 
 	async onConnectionReady() {
 		// executed when connection is ready
+	}
 
+	async onSend(command, data) {
 		console.log(this);
-
-		console.log(Utils);
+		console.log(data);
+		const { adapterName, instance } = this;
+		return this.socket.sendTo(`${adapterName}.${instance}`, command, data);
 	}
 
 	render() {
@@ -49,7 +49,11 @@ class App extends GenericApp {
 
 		return (
 			<div className="App">
-				<Settings native={this.state.native} onChange={(attr, value) => this.updateNativeValue(attr, value)} />
+				<Main
+					native={this.state.native}
+					onChange={(attr, value) => this.updateNativeValue(attr, value)}
+					onSend={this.onSend.bind(this)}
+				/>
 				{this.renderError()}
 				{this.renderToast()}
 				{this.renderSaveCloseButtons()}

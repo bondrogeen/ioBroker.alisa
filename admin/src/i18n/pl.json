@@ -1,4 +1,7 @@
 {
 	"alisa adapter settings": "Ustawienia adaptera dla alisa",
-	"token": "token"
+	"token": "token",
+	"login": "Login",
+	"password": "Password",
+	"cancel": "Cancel"
 }

@@ -1,4 +1,7 @@
 {
 	"alisa adapter settings": "alisa的适配器设置",
-	"token": "token"
+	"token": "token",
+	"login": "Login",
+	"password": "Password",
+	"cancel": "Cancel"
 }

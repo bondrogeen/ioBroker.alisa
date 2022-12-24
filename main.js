@@ -126,6 +126,7 @@ class Alisa extends utils.Adapter {
 	}
 
 	async onMessage(obj) {
+		this.log.info(JSON.stringify(obj.message));
 		if (typeof obj === 'object' && obj.message) {
 			this.log.info(JSON.stringify(obj));
 			if (obj.command === 'scan') {
