@@ -41,12 +41,15 @@ label > i[title] {
 .settings-form {
 	max-width: 300px;
 }
-.settings-form__btn {
+.settings-form__footer {
 	margin-top: 16px !important;
+	display: flex;
+	justify-content: space-between;
 }
 .settings-form__link {
 	cursor: pointer;
 	text-decoration: underline;
+	color: blue;
 }
 .settings-form__error {
 	margin: 0;

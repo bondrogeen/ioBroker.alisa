@@ -68,7 +68,7 @@ export function Settings({ native, onChange, onSend }) {
 						margin="normal"
 					/>
 					{error && <p className="settings-form__error">{error}</p>}
-					<div>
+					<div className="settings-form__footer">
 						<Button className="settings-form__btn" onClick={() => setValue(true)} size="medium">
 							{I18n.t('cancel')}
 						</Button>

@@ -41,16 +41,11 @@ class Alisa extends utils.Adapter {
 			this.log.warn(JSON.stringify({ id, val }));
 			return;
 		}
-		// this.log.info(`1) ${id}`);
 		if (this.existingStates[id]) {
-			// this.log.info(`2) ${id}`);
 			this.setState(id, { val: getVal(val), ack: true });
 		} else {
-			// this.log.info(`3) ${id}`);
 			this.getState(id, (err, obj) => {
-				// this.log.info(`4) ${id}`);
 				if (obj === null) {
-					// this.log.warn(JSON.stringify(obj));
 					this.setObjectNotExists(id, {
 						type: 'state',
 						common: {
@@ -64,7 +59,9 @@ class Alisa extends utils.Adapter {
 					});
 				}
 				this.existingStates[id] = true;
-				this.setValue(id, val);
+				this.setTimeout(() => {
+					this.setValue(id, val);
+				}, 1000);
 			});
 		}
 	}
@@ -72,14 +69,18 @@ class Alisa extends utils.Adapter {
 	onAlisaMessage(message) {
 		let id = `devices.${message.id}`;
 		const type = message.type;
-		for (const key in message) {
-			const value = message[key];
-			if (key === 'data') {
-				id = `${id}.${type}`;
-				getTree(id, value, (id, value) => this.setValue(id, value), ignoreKeys);
-			} else {
-				this.setValue(`${id}.${key}`, value);
+		if (type === 'message') {
+			for (const key in message) {
+				const value = message[key];
+				if (key === 'data') {
+					id = `${id}.${type}`;
+					getTree(id, value, (id, value) => this.setValue(id, value), ignoreKeys);
+				} else {
+					this.setValue(`${id}.${key}`, value);
+				}
 			}
+		} else {
+			this.setValue(`${id}.${type}`, message.data);
 		}
 	}
 
@@ -90,10 +91,10 @@ class Alisa extends utils.Adapter {
 			const res = await this.alisa.connection();
 			const localDevices = res?.localDevices || [];
 
-			this.log.warn(JSON.stringify(localDevices));
+			this.log.info(JSON.stringify(localDevices));
 
 			localDevices.forEach((device) => {
-				let id = `devices.${device.id}`;
+				const id = `devices.${device.id}`;
 				this.setValue(`${id}.command`, '');
 			});
 			this.setValue(`command`, '');
@@ -104,8 +105,8 @@ class Alisa extends utils.Adapter {
 		}
 	}
 	onUnload(callback) {
-		this.log.info('callback');
 		try {
+			this.alisa.disconnection();
 			callback();
 		} catch (e) {
 			callback();
@@ -129,6 +130,11 @@ class Alisa extends utils.Adapter {
 		this.log.info(JSON.stringify(obj.message));
 		if (typeof obj === 'object' && obj.message) {
 			this.log.info(JSON.stringify(obj));
+			if (obj.command === 'command') {
+				const { id, message } = obj.message;
+				this.alisa.onSend(id, message);
+				if (obj.callback) this.sendTo(obj.from, obj.command, { send: true }, obj.callback);
+			}
 			if (obj.command === 'scan') {
 				const res = await this.alisa.scan();
 				if (obj.callback) this.sendTo(obj.from, obj.command, res, obj.callback);
